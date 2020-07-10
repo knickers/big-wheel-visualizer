@@ -1,2 +1,3 @@
-# big-wheel-visualizer
-Classic big wheel bicycle kinetic extruder visualizer
+# Classic high wheel bicycle kinetic extruder visualizer
+
+Penny Farthing
