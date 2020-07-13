@@ -19,6 +19,7 @@ TOLHALF = TOLERANCE / 2;         // Half of the part tolerance
 CRANK   = MOTOR_SIZE / 6;        // Peddle crank length
 ROD     = MOTOR_SIZE / 2;        // Connecting rod length
 PIN_HEIGHT = 4 + 0;
+OCTO_R  = sqrt( 4 - 2 * SQRT2 ); // Found in octo-math.md
 
 
 
@@ -63,17 +64,16 @@ module spoke() {
 		cube([MOTOR_SIZE/2, 1, 2]);
 }
 
-module wheel() {
-	n = 10;    // Number of spokes
-	a = 360/n; // Angle for each spoke
+module wheel(radius, spokes) {
+	a = 360/spokes; // Angle for each spoke
 
 	union() {
-		rotate_extrude(angle=360, convexity=4)
-			translate([MOTOR_SIZE/2, 0, 0])
+		rotate_extrude(angle=360, convexity=4, $fn=$fn*2)
+			translate([radius, 0, 0])
 				rotate(22.5, [0,0,1])
-					circle(d=2, $fn=8);
+					circle(d=2*OCTO_R, $fn=8);
 
-		for (i = [0:n-1])
+		for (i = [0:spokes-1])
 			rotate([0, 0, i*a])
 				spoke();
 	}
