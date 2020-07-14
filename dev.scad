@@ -20,4 +20,5 @@ exploded(5);
 rotate([90, 0, 0])
 	combined();
 */
-wheel(MOTOR_SIZE/2, 10);
+wheel(MOTOR_SIZE/2-4, 10);
+frame();

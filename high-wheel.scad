@@ -20,6 +20,7 @@ CRANK   = MOTOR_SIZE / 6;        // Peddle crank length
 ROD     = MOTOR_SIZE / 2;        // Connecting rod length
 PIN_HEIGHT = 4 + 0;
 OCTO_R  = sqrt( 4 - 2 * SQRT2 ); // Found in octo-math.md
+TIRE    = 2*OCTO_R;              // Tire diameter
 
 
 
@@ -59,9 +60,9 @@ module pin() {
 		cylinder(r1 = PIN, r2 = PIN + 0.5, h = 0.5);
 }
 
-module spoke() {
+module spoke(length) {
 	translate([0, -0.5, -1])
-		cube([MOTOR_SIZE/2, 1, 2]);
+		cube([length, 1, 2]);
 }
 
 module wheel(radius, spokes) {
@@ -71,13 +72,29 @@ module wheel(radius, spokes) {
 		rotate_extrude(angle=360, convexity=4, $fn=$fn*2)
 			translate([radius, 0, 0])
 				rotate(22.5, [0,0,1])
-					circle(d=2*OCTO_R, $fn=8);
+					circle(d=TIRE, $fn=8);
 
 		for (i = [0:spokes-1])
 			rotate([0, 0, i*a])
-				spoke();
+				spoke(radius);
 	}
 }
 
 module frame() {
+	R = MOTOR_SIZE/2; // Upper frame radius
+	r = MOTOR_SIZE/4; // Lower frame radius
+	union() {
+		rotate_extrude(angle=135, convexity=4, $fn=$fn*2)
+			translate([R, 0, 0])
+				rotate(22.5, [0,0,1])
+					circle(d=TIRE, $fn=8);
+
+		translate([R, 0, 0])
+			rotate(180, [0,0,1])
+				translate([-r, 0, 0])
+					rotate_extrude(angle=90, convexity=4, $fn=$fn*2)
+						translate([r, 0, 0])
+							rotate(22.5, [0,0,1])
+								circle(d=TIRE, $fn=8);
+	}
 }
