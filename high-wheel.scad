@@ -13,9 +13,13 @@ TOLERANCE = 0.2; // [0.1:0.05:0.5]
 $fn     = 24 + 0;                // Curve resolution
 PIN     = 2 + 0;                 // Pin radius
 WALL    = 2 + 0;                 // Wall thickness
+SIZE    = MOTOR_SIZE / 2;        // Half the motor size
 MOUNT   = MOUNTING_TAB_SIZE / 2; // Motor mount tab radius
 SQRT2   = sqrt(2);               // Square root of 2
 TOLHALF = TOLERANCE / 2;         // Half of the part tolerance
+FRAME_R = SIZE * SQRT2;          // Upper frame curve radius
+WHEEL_R = FRAME_R - 3;           // Main wheel radius
+
 CRANK   = MOTOR_SIZE / 6;        // Peddle crank length
 ROD     = MOTOR_SIZE / 2;        // Connecting rod length
 PIN_HEIGHT = 4 + 0;
@@ -47,6 +51,14 @@ module mount() {
 		}
 }
 
+module mounts() {
+	translate([-MOTOR_SIZE/2, MOTOR_SIZE/2, 0])
+		mount(); // Upper left
+
+	translate([MOTOR_SIZE/2, MOTOR_SIZE/2, 0])
+		mount(); // Upper right
+}
+
 module pin() {
 	// Pin body
 	cylinder(r = PIN, h = PIN_HEIGHT);
@@ -58,6 +70,17 @@ module pin() {
 	// Lower cone
 	translate([0, 0, PIN_HEIGHT])
 		cylinder(r1 = PIN, r2 = PIN + 0.5, h = 0.5);
+}
+
+// Pin ring with a split for flexing over the pin head
+module ring(height) {
+	difference() {
+		cylinder(r = PIN+TOLHALF+1, h = height);
+		translate([0, 0, -1])
+			cylinder(r = PIN+TOLHALF, h = height+2);
+		translate([-TOLERANCE/2, 0, -1])
+			cube([TOLERANCE, PIN+TOLERANCE+1, height+2]);
+	}
 }
 
 module spoke(length) {
@@ -80,21 +103,39 @@ module wheel(radius, spokes) {
 	}
 }
 
-module frame() {
-	R = MOTOR_SIZE/2; // Upper frame radius
-	r = MOTOR_SIZE/4; // Lower frame radius
+module main_wheel() {
 	union() {
+		wheel(WHEEL_R, 8);
+
+		for (i = [0:1]) {
+			rotate(i*180-67.5, [0,0,1])
+				translate([0, CRANK, 0])
+					ring(2);
+		}
+	}
+}
+
+module frame() {
+	r = FRAME_R/2; // Lower frame radius
+
+	union() {
+		mounts();
+
 		rotate_extrude(angle=135, convexity=4, $fn=$fn*2)
-			translate([R, 0, 0])
+			translate([FRAME_R, 0, 0])
 				rotate(22.5, [0,0,1])
 					circle(d=TIRE, $fn=8);
 
-		translate([R, 0, 0])
+		translate([FRAME_R, 0, 0])
 			rotate(180, [0,0,1])
 				translate([-r, 0, 0])
 					rotate_extrude(angle=90, convexity=4, $fn=$fn*2)
 						translate([r, 0, 0])
 							rotate(22.5, [0,0,1])
 								circle(d=TIRE, $fn=8);
+
+		translate([FRAME_R*1.5, -FRAME_R/2, 0])
+			rotate(18, [0,0,1])
+				wheel(WHEEL_R - FRAME_R/2, 5);
 	}
 }
