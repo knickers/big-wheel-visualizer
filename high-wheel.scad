@@ -88,8 +88,8 @@ module spoke(length) {
 		cube([length, 1, 2]);
 }
 
-module wheel(radius, spokes) {
-	a = 360/spokes; // Angle for each spoke
+module wheel(radius, spokes, spoke_angle=0) {
+	a = spoke_angle > 0 ? spoke_angle : 360/spokes; // Angle for each spoke
 
 	union() {
 		rotate_extrude(angle=360, convexity=4, $fn=$fn*2)
