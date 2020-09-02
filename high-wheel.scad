@@ -74,12 +74,21 @@ module pin() {
 
 // Pin ring with a split for flexing over the pin head
 module ring(height) {
-	difference() {
-		cylinder(r = PIN+TOLHALF+1, h = height);
+	cylinder(r = PIN+TOLHALF+1, h = height);
+}
+module ring_negative(height) {
+	union() {
+		// Center cylinder
 		translate([0, 0, -1])
 			cylinder(r = PIN+TOLHALF, h = height+2);
-		translate([-TOLERANCE/2, 0, -1])
-			cube([TOLERANCE, PIN+TOLERANCE+1, height+2]);
+
+		// Vertical cutout
+		translate([-TOLERANCE/2, -PIN-TOLERANCE-1, -1])
+			cube([TOLERANCE, PIN*2+TOLERANCE*2+2, height+2]);
+
+		// Horizontal cutout
+		translate([-PIN-TOLERANCE-1, -TOLERANCE/2, -1])
+			cube([PIN*2+TOLERANCE*2+2, TOLERANCE, height+2]);
 	}
 }
 
@@ -104,13 +113,21 @@ module wheel(radius, spokes, spoke_angle=0) {
 }
 
 module main_wheel() {
-	union() {
-		wheel(WHEEL_R, 8);
+	difference() {
+		union() {
+			wheel(WHEEL_R, 8);
+
+			for (i = [0:1]) {
+				rotate(i*180-67.5, [0,0,1])
+					translate([0, CRANK, 0])
+						ring(2);
+			}
+		}
 
 		for (i = [0:1]) {
 			rotate(i*180-67.5, [0,0,1])
 				translate([0, CRANK, 0])
-					ring(2);
+					ring_negative(2);
 		}
 	}
 }
