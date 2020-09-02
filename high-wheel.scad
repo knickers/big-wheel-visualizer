@@ -84,7 +84,7 @@ module ring(height) {
 }
 
 module spoke(length) {
-	translate([0, -0.5, -1])
+	translate([0, -0.5, 0])
 		cube([length, 1, 2]);
 }
 
@@ -93,7 +93,7 @@ module wheel(radius, spokes, spoke_angle=0) {
 
 	union() {
 		rotate_extrude(angle=360, convexity=4, $fn=$fn*2)
-			translate([radius, 0, 0])
+			translate([radius, 1, 0])
 				rotate(22.5, [0,0,1])
 					circle(d=TIRE, $fn=8);
 
@@ -122,7 +122,7 @@ module frame() {
 		mounts();
 
 		rotate_extrude(angle=135, convexity=4, $fn=$fn*2)
-			translate([FRAME_R, 0, 0])
+			translate([FRAME_R, 1, 0])
 				rotate(22.5, [0,0,1])
 					circle(d=TIRE, $fn=8);
 
@@ -130,7 +130,7 @@ module frame() {
 			rotate(180, [0,0,1])
 				translate([-r, 0, 0])
 					rotate_extrude(angle=90, convexity=4, $fn=$fn*2)
-						translate([r, 0, 0])
+						translate([r, 1, 0])
 							rotate(22.5, [0,0,1])
 								circle(d=TIRE, $fn=8);
 
