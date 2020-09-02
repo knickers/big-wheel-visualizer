@@ -133,7 +133,7 @@ module main_wheel() {
 }
 
 module frame() {
-	r = FRAME_R/2; // Lower frame radius
+	r = FRAME_R/1.8; // Lower frame radius
 
 	union() {
 		mounts();
@@ -151,8 +151,8 @@ module frame() {
 							rotate(22.5, [0,0,1])
 								circle(d=TIRE, $fn=8);
 
-		translate([FRAME_R*1.5, -FRAME_R/2, 0])
+		translate([FRAME_R+r, -r, 0])
 			rotate(-118, [0,0,1])
-				wheel(WHEEL_R - FRAME_R/2, 4, 72);
+				wheel(WHEEL_R-r, 4, 72);
 	}
 }
