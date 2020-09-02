@@ -135,7 +135,7 @@ module frame() {
 								circle(d=TIRE, $fn=8);
 
 		translate([FRAME_R*1.5, -FRAME_R/2, 0])
-			rotate(18, [0,0,1])
-				wheel(WHEEL_R - FRAME_R/2, 5);
+			rotate(-118, [0,0,1])
+				wheel(WHEEL_R - FRAME_R/2, 4, 72);
 	}
 }
