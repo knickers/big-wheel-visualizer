@@ -23,7 +23,7 @@ WHEEL_R = FRAME_R - 3;           // Main wheel radius
 CRANK   = MOTOR_SIZE / 6;        // Peddle crank length
 ROD     = MOTOR_SIZE / 2;        // Connecting rod length
 PIN_HEIGHT = 4 + 0;
-OCTO_R  = sqrt( 4 - 2 * SQRT2 ); // Found in octo-math.md
+OCTO_R  = sqrt( 4 - 2 * SQRT2 ); // Short octogon side radius, see octo-math.md
 TIRE    = 2*OCTO_R;              // Tire diameter
 
 
